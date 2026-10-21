@@ -1,13 +1,14 @@
-conda activate main
+source ~/miniconda3/etc/profile.d/conda.sh
+conda activate env
 
 # Update root directory as per your file structure
-export ROOT=/home/cpu-centric-agentic-ai
+export ROOT=/home/konnext/cpu-centric-agentic-ai
 
 # Update HF_HOME env variable as per your hugging face home location
-export HF_HOME=/storage/hugging_face/
+# export HF_HOME=/storage/hugging_face/
 
 MODEL=openai/gpt-oss-20b
-GPU=0
+GPU=1
 
 echo "Starting vLLM server for gpt-oss-20b ..."
 
@@ -106,7 +107,7 @@ run_parallel 128 >> "$ROOT/langchain/latency_figure3.txt"
 sleep 5
 
 python "$ROOT/langchain/plot_multiprocessing.py" --input "$ROOT/langchain/latency_figure3.txt" --output "$ROOT/figures/figure_3.png"
-kill -TERM "$(cat vllm.pid)"
+# kill -TERM "$(cat vllm.pid)"
 
 wait "$(cat vllm.pid)" 2>/dev/null || true
 
