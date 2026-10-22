@@ -5,6 +5,7 @@ import subprocess
 import time
 
 import psutil
+from scheduling.policy_n import update_concurrency
 
 
 # ============================================================
@@ -274,19 +275,10 @@ try:
 
         old_N = N
 
-        if cpu_util > HIGH_CPU:
-
-            N = max(
-                N_MIN,
-                N - STEP
-            )
-
-        elif cpu_util < LOW_CPU:
-
-            N = min(
-                N_MAX,
-                N + STEP
-            )
+        N = update_concurrency(
+            N, cpu_util, minimum=N_MIN, maximum=N_MAX, step=STEP,
+            low_cpu=LOW_CPU, high_cpu=HIGH_CPU
+        )
 
         # Between LOW_CPU and HIGH_CPU:
         # keep N unchanged.

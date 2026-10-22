@@ -1,8 +1,36 @@
 # Independent Dynamic B and Dynamic O
 
-The new harness implements two independently selectable optimizations. It does
-not change `dynamic_scheduler.py`, `static_scheduler.py`, `orchestrator.py`, or
-the existing Dynamic N comparison. Use Python 3.9 or newer.
+The new harness implements two independently selectable optimizations. Use
+Python 3.9 or newer. The existing N launcher delegates its unchanged threshold
+rule to `scheduling/policy_n.py`; its CLI, sampling, admission and CSV behavior
+remain the same. The static scheduler and orchestrator are unchanged.
+
+## File organization
+
+All three independent policy modules use the same `policy_<dimension>.py` format:
+
+```text
+langchain/
+  scheduling/
+    __init__.py
+    policy_n.py       # N: process admission target, CPU percentage input
+    policy_b.py       # B: next cohort size, CPU fraction input
+    policy_o.py       # O: next preparation release time
+    metrics.py        # Shared statistics, not a control policy
+  dynamic_scheduler.py          # Existing N experiment entry point
+  adaptive_scheduler.py         # Shared B/O execution and instrumentation
+  adaptive_worker.py            # Request execution and inference gate
+  run_adaptive_experiments.py    # Paired B/O experiments
+  analyze_adaptive_results.py    # Trial-level analysis
+```
+
+`adaptive_policies.py` now contains compatibility imports only; implementations
+live in the separate modules. New code should import those modules directly.
+This refactor separates responsibilities without enabling combined controllers.
+Future N+B or combinations with O must coordinate capacity, membership and
+release timing in the runtime, including invalidating timing estimates when
+capacity or cohort size changes. N uses CPU percentages, while B uses fractions;
+any shared state adapter must convert explicitly.
 
 ## Run a complete simulation experiment
 

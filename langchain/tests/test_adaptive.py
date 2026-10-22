@@ -7,7 +7,9 @@ from unittest.mock import patch
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from adaptive_policies import BatchPolicy, OverlapPolicy, percentile
+from scheduling.policy_b import BatchPolicy
+from scheduling.policy_o import OverlapPolicy
+from scheduling.metrics import percentile
 from adaptive_scheduler import Config, Runner, load_requests, intersection_duration
 from adaptive_worker import run_request
 
@@ -33,7 +35,7 @@ class PoliciesTest(unittest.TestCase):
         self.assertEqual(policy.choose(10), (1, 'failure_hold'))
 
     def test_confirmed_score_change_and_urgency(self):
-        from adaptive_policies import Estimate
+        from scheduling.policy_b import Estimate
         policy = BatchPolicy([1, 2], 1, dwell=1, confirmations=2)
         policy.estimates = {1: Estimate(1, 1, 3), 2: Estimate(3, 1, 3)}
         policy.reference = 1

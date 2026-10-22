@@ -11,7 +11,7 @@ import statistics
 from collections import defaultdict
 from pathlib import Path
 
-from adaptive_policies import percentile
+from scheduling.metrics import percentile
 
 
 METRICS = ('goodput', 'p50_latency', 'p90_latency', 'makespan', 'failed',

@@ -16,7 +16,9 @@ from collections import deque
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-from adaptive_policies import BatchPolicy, OverlapPolicy, percentile
+from scheduling.policy_b import BatchPolicy
+from scheduling.policy_o import OverlapPolicy
+from scheduling.metrics import percentile
 from adaptive_worker import run_request
 
 
