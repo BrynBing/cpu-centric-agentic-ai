@@ -334,7 +334,7 @@ class Runner:
                                     if self.rows[i]['success']], not cohort['clean'])
             self.active_b = None
         if self.pending:
-            size, reason = (self.batch.choose(len(self.pending), now) if self.batch
+            size, reason = (self.batch.choose(len(self.pending), oldest_age=0.0) if self.batch
                             else (self.cfg.batch_size, 'fixed'))
             self.event('batch_decision', now, target=size, reason=reason)
             self.active_b = self.new_cohort(size, now)
